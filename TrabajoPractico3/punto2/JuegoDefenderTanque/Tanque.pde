@@ -1,0 +1,3 @@
+class Tanque extends GameObject{
+
+}

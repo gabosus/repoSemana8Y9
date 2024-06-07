@@ -1,0 +1,2 @@
+class Muro extends GameObject{
+}
