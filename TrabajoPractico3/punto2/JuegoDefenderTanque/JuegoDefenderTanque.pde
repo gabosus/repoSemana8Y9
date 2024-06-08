@@ -1,67 +1,55 @@
-ArrayList<Muro> muros;
-ArrayList<Bala> balas;
 Tanque tanque;
 GestorMurallas gestorMurallas;
-PImage tanqueImagen, muroImagen, balaImagen;
-float deltaTime;
-int lastTime;
+float deltaTime, lastTime;
 
 void setup() {
-  size(800, 600);
-  tanqueImagen = loadImage("tanque.png");
-  muroImagen = loadImage("muro.png");
-  balaImagen = loadImage("bala.png");
-
-  tanque = new Tanque(new Transform(width / 2, height - 50, 50, 50), tanqueImagen);
+  size(1000, 1000);
+  
+  PImage tanqueImg = loadImage("tanque.png");
+  tanque = new Tanque(tanqueImg, new Transform(width/2,  60), 200);
+  
   gestorMurallas = new GestorMurallas();
-  balas = new ArrayList<Bala>();
-
+  PImage muroImg = loadImage("muro.png");
+  for (int i = 0; i < 5; i++) {
+    Muro muro = new Muro(muroImg, new Transform(300, 100), int(random(10, 30)));
+    gestorMurallas.addMuro(muro);
+  }
+  
   lastTime = millis();
-  crearMuros();
 }
 
 void draw() {
   background(255);
-  deltaTime = (millis() - lastTime) / 1000.0;
-  lastTime = millis();
   
-  tanque.mostrar();
-  tanque.mover(deltaTime);
-
-  for (Bala bala : balas) {
-    bala.mover(deltaTime);
-    bala.mostrar();
+  float currentTime = millis();
+  deltaTime = (currentTime - lastTime) / 1000.0;
+  lastTime = currentTime;
+  
+  if (keyPressed) {
+    if (keyCode == LEFT) {
+      tanque.move(-1);
+    } else if (keyCode == RIGHT) {
+      tanque.move(1);
+    }
   }
-
-  gestorMurallas.mostrarMuros();
-  gestorMurallas.verificarColision(balas);
-
-  eliminarBalasFueraDePantalla();
-}
-
-void keyPressed() {
-  if (key == ' ') {
-    balas.add(tanque.disparar());
+  
+  if (key == 'k') {
+    tanque.shoot();
   }
-}
-
-// Función para crear muros en diferentes posiciones
-void crearMuros() {
-  for (int i = 0; i < 5; i++) {
-    int x = (i * 160) + 50;
-    int y = 200;
-    gestorMurallas.agregarMuro(new Muro(new Transform(x, y, 50, 50), muroImagen, int(random(10, 31))));
+  
+  tanque.display();
+  for (Bala bala : tanque.balas) {
+    bala.move();
+    bala.display();
   }
-}
-
-// Clase Transform
-class Transform {
-  float x, y, width, height;
-
-  Transform(float x, float y, float width, float height) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+  
+  gestorMurallas.verificarColision(tanque.balas);
+  
+  for (Muro muro : gestorMurallas.murallas) {
+    muro.display();
   }
+  
+  fill(0);
+  text("Balas: " + tanque.balas.size(), 10, height - 20);
+  text("Muros: " + gestorMurallas.murallas.size(), 10, height - 40);
 }

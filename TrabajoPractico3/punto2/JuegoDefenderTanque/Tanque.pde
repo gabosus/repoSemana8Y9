@@ -1,3 +1,19 @@
-class Tanque extends GameObject{
-
+class Tanque extends GameObject {
+  ArrayList<Bala> balas = new ArrayList<Bala>();
+  float velocidad;
+  
+  Tanque(PImage img, Transform transform, float velocidad) {
+    super(img, transform);
+    this.velocidad = velocidad;
+  }
+  
+  void move(float dir) {
+    transform.x += dir * velocidad * deltaTime;
+  }
+  
+  void shoot() {
+    PImage balaImg = loadImage("bala.png");
+    Bala bala = new Bala(balaImg, new Transform(transform.x + img.width/2, transform.y), 300);
+    balas.add(bala);
+  }
 }
