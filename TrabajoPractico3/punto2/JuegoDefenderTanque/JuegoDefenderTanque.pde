@@ -1,17 +1,23 @@
 Tanque tanque;
+Bala bala;
 GestorMurallas gestorMurallas;
 float deltaTime, lastTime;
 
 void setup() {
   size(1000, 1000);
+  PImage balaImg = loadImage("tanque.png");
+  balaImg.resize(10,10);
+  bala = new Bala(balaImg, new Transform(800,  400), 500);
   
   PImage tanqueImg = loadImage("tanque.png");
-  tanque = new Tanque(tanqueImg, new Transform(width/2,  60), 200);
+  tanqueImg.resize(100,100);
+  tanque = new Tanque(tanqueImg, new Transform(width/2,  800), 200);
   
   gestorMurallas = new GestorMurallas();
   PImage muroImg = loadImage("muro.png");
+  muroImg.resize(700,200);
   for (int i = 0; i < 5; i++) {
-    Muro muro = new Muro(muroImg, new Transform(300, 100), int(random(10, 30)));
+    Muro muro = new Muro(muroImg, new Transform(300, 100), (int)random(10,30));
     gestorMurallas.addMuro(muro);
   }
   

@@ -1,6 +1,6 @@
 abstract class GameObject {
-  PImage img;
-  Transform transform;
+  protected PImage img;
+  protected Transform transform;
   
   GameObject(PImage img, Transform transform) {
     this.img = img;
