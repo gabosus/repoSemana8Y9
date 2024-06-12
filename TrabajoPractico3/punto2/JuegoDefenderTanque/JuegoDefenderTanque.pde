@@ -5,9 +5,9 @@ float deltaTime, lastTime;
 
 void setup() {
   size(1000, 1000);
-  PImage balaImg = loadImage("tanque.png");
-  balaImg.resize(10,10);
-  bala = new Bala(balaImg, new Transform(800,  400), 500);
+  PImage balaImg = loadImage("bala.png");
+
+  bala = new Bala(balaImg, new Transform(100,  10));
   
   PImage tanqueImg = loadImage("tanque.png");
   tanqueImg.resize(100,100);

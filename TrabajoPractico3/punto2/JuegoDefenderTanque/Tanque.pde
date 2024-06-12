@@ -13,7 +13,7 @@ class Tanque extends GameObject {
   
   void shoot() {
     PImage balaImg = loadImage("bala.png");
-    Bala bala = new Bala(balaImg, new Transform(transform.x + img.width/2, transform.y), 300);
+    Bala bala = new Bala(balaImg, new Transform(transform.x + img.width/2, transform.y));
     balas.add(bala);
   }
 }
