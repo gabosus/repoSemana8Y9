@@ -1,5 +1,5 @@
-private Comida bird;
-private Snake snake;
+protected Comida bird;
+protected Snake snake;
 void setup(){
   size(600,600);
   frameRate(120);
@@ -17,6 +17,8 @@ void draw(){
   bird.display();
   snake.display();
   snake.mover();
+  snake.grow();
+  snake.verificarCollider(bird);
   textSize(30);
   text("Tiempo: "+millis()/1000, 400, 50);
 }

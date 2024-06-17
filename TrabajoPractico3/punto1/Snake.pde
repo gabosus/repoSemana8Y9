@@ -20,7 +20,8 @@ class Snake extends GameObject {
     }
   }
 
-  public void mover() {
+ public void mover() {
+    PVector newPos = new PVector(this.posicion.x, this.posicion.y);
     if (key == 'w' || keyCode == UP) {
       this.posicion.y -= this.velocidad.y*lado*Time.getDeltaTime(frameRate);
     } else if (key == 's' || keyCode == DOWN) {
@@ -30,7 +31,19 @@ class Snake extends GameObject {
     } else if (key == 'd' || keyCode == RIGHT) {
       this.posicion.x += this.velocidad.x*lado*Time.getDeltaTime(frameRate);
     }
-    cuerpoSnake.add(new PVector(this.posicion.x, this.posicion.y));
-    cuerpoSnake.remove(0);
+    // Add the new position to the snake's body
+    cuerpoSnake.add(newPos);
+    // Update the snake's position
+    this.posicion = newPos;
+  
   }
+   public void grow() {
+     PVector tail = cuerpoSnake.get(0);
+     cuerpoSnake.add(0,new PVector(tail.x,tail.y));
+   }
+   public boolean verificarCollider(Comida bird){
+     PVector head = cuerpoSnake.get(cuerpoSnake.size()-1);
+     return PVector.dist(head,bird.posicion)< lado;
+   }
+     
 }
