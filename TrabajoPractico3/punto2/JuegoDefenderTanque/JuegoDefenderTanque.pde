@@ -1,67 +1,69 @@
-ArrayList<Muro> muros;
-ArrayList<Bala> balas;
 Tanque tanque;
-GestorMurallas gestorMurallas;
-PImage tanqueImagen, muroImagen, balaImagen;
-float deltaTime;
-int lastTime;
+GestorMurallas gestorMurallas; 
+boolean reposo = true;
 
 void setup() {
-  size(800, 600);
-  tanqueImagen = loadImage("tanque.png");
-  muroImagen = loadImage("muro.png");
-  balaImagen = loadImage("bala.png");
+    size(1000, 1000);
+   
+    PImage tanqueImg = loadImage("tanque.png");
+    tanqueImg.resize(100, 100);
+    tanque = new Tanque(tanqueImg, new Transform(width / 2, 800), 200);
 
-  tanque = new Tanque(new Transform(width / 2, height - 50, 50, 50), tanqueImagen);
-  gestorMurallas = new GestorMurallas();
-  balas = new ArrayList<Bala>();
+   gestorMurallas = new GestorMurallas();
+    PImage muroImg = loadImage("muro.png");
+    muroImg.resize(100, 20); 
+    for (int i = 0; i < 10; i++) {
+        float x = random(0, width - muroImg.width); 
+        float y = random(0, height / 4); 
+        Muro muro = new Muro(muroImg, new Transform(x, y),30, 50);
+        gestorMurallas.addMuro(muro);
+    
+    }
 
-  lastTime = millis();
-  crearMuros();
+    frameRate(500);
 }
 
 void draw() {
-  background(255);
-  deltaTime = (millis() - lastTime) / 1000.0;
-  lastTime = millis();
-  
-  tanque.mostrar();
-  tanque.mover(deltaTime);
+    background(255); 
 
-  for (Bala bala : balas) {
-    bala.mover(deltaTime);
-    bala.mostrar();
-  }
+    if (keyPressed) {
+        if (keyCode == LEFT) {
+            tanque.move(-1);
+        } else if (keyCode == RIGHT) {
+            tanque.move(1);
+        } else if (key == 'k' && reposo) {
+            tanque.shoot();
+            reposo = false;
+        }
+    } else {
+        reposo = true; 
+    }
 
-  gestorMurallas.mostrarMuros();
-  gestorMurallas.verificarColision(balas);
+    tanque.display();
+    for (Bala bala : tanque.balas) {
+        bala.move();
+        bala.display();
+    }
 
-  eliminarBalasFueraDePantalla();
-}
+   gestorMurallas.verificarColision(tanque.balas);
 
-void keyPressed() {
-  if (key == ' ') {
-    balas.add(tanque.disparar());
-  }
-}
+ boolean changeDirection = false;
+    for (Muro muro : gestorMurallas.murallas) {
+        muro.mover(); // Mover los muros
+        if (muro.transform.x < 0 || muro.transform.x + muro.img.width > width) {
+            changeDirection = true;
+        }
+        muro.display();
+    }
 
-// Función para crear muros en diferentes posiciones
-void crearMuros() {
-  for (int i = 0; i < 5; i++) {
-    int x = (i * 160) + 50;
-    int y = 200;
-    gestorMurallas.agregarMuro(new Muro(new Transform(x, y, 50, 50), muroImagen, int(random(10, 31))));
-  }
-}
+    if (changeDirection) {
+        for (Muro muro : gestorMurallas.murallas) {
+            muro.velocidad *= -1; 
+            muro.transform.y += 20; 
+        }
+    }
 
-// Clase Transform
-class Transform {
-  float x, y, width, height;
-
-  Transform(float x, float y, float width, float height) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-  }
+    fill(0);
+    text("Balas: " + tanque.balas.size(), 10, height - 20);
+    text("Muros: " + gestorMurallas.murallas.size(), 10, height - 40);
 }
