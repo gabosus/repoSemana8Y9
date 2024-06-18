@@ -8,7 +8,8 @@ class Tanque extends GameObject {
     }
 
     void move(float dir) {
-        transform.x += dir * velocidad * deltaTime;
+      
+        transform.x += dir * velocidad * Time.getDeltaTime(frameRate);
     }
 
     void shoot() {

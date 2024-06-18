@@ -14,7 +14,7 @@ class Bala {
 
     void move() {
         if (active) {
-            transform.y -= velocidad * deltaTime; 
+            transform.y -= velocidad * Time.getDeltaTime(frameRate); 
         }
     }
 
